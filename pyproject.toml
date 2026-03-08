@@ -1,0 +1,41 @@
+[project]
+name = "verbatim"
+version = "0.1.0"
+description = "Record AI-driven browser demos from a URL and prompt for tech documentation"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Verbatim Contributors" }]
+keywords = ["browser", "automation", "demo", "video", "documentation", "browser-use"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Documentation",
+]
+
+dependencies = [
+    "browser-use[video]>=0.12.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.14.0",
+]
+
+[project.scripts]
+verbatim = "verbatim.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]

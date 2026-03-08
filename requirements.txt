@@ -1,0 +1,4 @@
+# Verbatim dependencies (install with: pip install -r requirements.txt)
+# For video recording, install the video extra: pip install "browser-use[video]"
+browser-use[video]>=0.12.0
+python-dotenv>=1.0.0
