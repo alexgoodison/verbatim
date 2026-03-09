@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verbatim</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --surface: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #e8e8e8;
+      --text-muted: #888;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --success: #22c55e;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .layout {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.5rem 0;
+    }
+    .tagline {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+      color: var(--text-muted);
+    }
+    input[type="url"],
+    textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      font: inherit;
+      font-size: 0.95rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    input[type="url"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    button {
+      font: inherit;
+      font-weight: 600;
+      padding: 0.65rem 1.25rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    button:hover { background: var(--accent-hover); }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .generations {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .generations li {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+    }
+    .generations li:last-child { border-bottom: none; }
+    .gen-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .gen-filename {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+    .gen-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .gen-status {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      background: var(--border);
+      color: var(--text-muted);
+    }
+    .gen-status.running { background: rgba(99, 102, 241, 0.25); color: var(--accent); }
+    .gen-status.completed { background: rgba(34, 197, 94, 0.2); color: var(--success); }
+    video {
+      width: 100%;
+      max-height: 360px;
+      border-radius: 8px;
+      background: #000;
+    }
+    .empty {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      padding: 1.5rem 0;
+      text-align: center;
+    }
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      z-index: 100;
+      animation: fadeIn 0.2s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <h1>Verbatim</h1>
+    <p class="tagline">Record AI-driven browser demos from a URL and prompt.</p>
+
+    <section class="card">
+      <h2>New generation</h2>
+      <form id="start-form">
+        <label for="url">URL</label>
+        <input type="url" id="url" name="url" placeholder="https://example.com" required />
+        <label for="prompt">Prompt</label>
+        <textarea id="prompt" name="prompt" placeholder="e.g. Click Sign in and fill the form with test@example.com" required></textarea>
+        <button type="submit" id="submit-btn">Start recording</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Previously created</h2>
+      <ul class="generations" id="generations"></ul>
+      <p class="empty" id="empty" style="display: none;">No recordings yet. Start one above.</p>
+    </section>
+  </div>
+
+  <script>
+    const API = '/api';
+    const form = document.getElementById('start-form');
+    const list = document.getElementById('generations');
+    const empty = document.getElementById('empty');
+    const submitBtn = document.getElementById('submit-btn');
+
+    function showToast(message) {
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.textContent = message;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' });
+    }
+
+    function renderGeneration(g) {
+      const li = document.createElement('li');
+      li.dataset.id = g.id;
+      li.innerHTML = `
+        <div class="gen-header">
+          <span class="gen-filename">${escapeHtml(g.filename)}</span>
+          <span class="gen-date">${formatDate(g.created_at)}</span>
+          <span class="gen-status ${g.status}">${g.status}</span>
+        </div>
+        ${g.status === 'completed' ? `<video controls preload="metadata" src="${escapeHtml(g.url)}"></video>` : '<p class="empty">Recording in progress… Refresh to see the video when it’s done.</p>'}
+      `;
+      return li;
+    }
+
+    function escapeHtml(s) {
+      const div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    async function loadGenerations() {
+      try {
+        const res = await fetch(API + '/generations');
+        const data = await res.json();
+        list.innerHTML = '';
+        data.forEach(g => list.appendChild(renderGeneration(g)));
+        empty.style.display = data.length === 0 ? 'block' : 'none';
+      } catch (e) {
+        empty.textContent = 'Could not load recordings.';
+        empty.style.display = 'block';
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = document.getElementById('url').value.trim();
+      const prompt = document.getElementById('prompt').value.trim();
+      if (!url || !prompt) return;
+      submitBtn.disabled = true;
+      try {
+        const res = await fetch(API + '/generations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, prompt }),
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const gen = await res.json();
+        list.insertBefore(renderGeneration(gen), list.firstChild);
+        empty.style.display = 'none';
+        showToast('Recording started. The browser will open shortly.');
+        form.reset();
+      } catch (err) {
+        showToast('Failed to start: ' + (err.message || 'Unknown error'));
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    loadGenerations();
+  </script>
+</body>
+</html>

@@ -29,7 +29,12 @@ load_dotenv()
     default=False,
     help="Run browser in headless mode (default: no-headless for visible demo)",
 )
-def main(url: str, prompt: str, output_path: Path | None, headless: bool) -> None:
+def main(
+    url: str,
+    prompt: str,
+    output_path: Path | None,
+    headless: bool,
+) -> None:
     """
     Record a demo video by having an AI agent complete a task on a website.
 
@@ -42,7 +47,7 @@ def main(url: str, prompt: str, output_path: Path | None, headless: bool) -> Non
 
     Example:
 
-        verbatim https://myapp.com/docs "Open the API section and scroll to Authentication"
+        verbatim https://myapp.com/docs "Open the API section" -o demo.mp4
     """
     if not output_path:
         from datetime import datetime
@@ -57,7 +62,12 @@ def main(url: str, prompt: str, output_path: Path | None, headless: bool) -> Non
 
     try:
         result = asyncio.run(
-            run_recording(url, prompt, output_path, headless=headless)
+            run_recording(
+                url,
+                prompt,
+                output_path,
+                headless=headless,
+            )
         )
         click.echo(click.style(f"Done. Video saved to: {result}", fg="green"))
     except FileNotFoundError as e:

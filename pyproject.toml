@@ -25,6 +25,10 @@ dependencies = [
 dev = [
     "ruff>=0.14.0",
 ]
+ui = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+]
 
 [project.scripts]
 verbatim = "verbatim.cli:main"

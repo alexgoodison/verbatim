@@ -1,0 +1,4 @@
+# UI dependencies (install in addition to main requirements)
+# From project root: pip install -r requirements.txt && pip install -r ui/requirements-ui.txt
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0

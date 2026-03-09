@@ -69,6 +69,21 @@ verbatim https://myapp.com "Open the API section and scroll to Authentication" -
 verbatim https://example.com "Click 'More information' and then the first link"
 ```
 
+### Web UI
+
+From the project root you can run a local UI to start generations and view previously created recordings:
+
+```bash
+# Install UI deps (once)
+pip install -e ".[ui]"
+# Or: pip install -r requirements.txt && pip install -r ui/requirements-ui.txt
+
+# Run the UI server (from project root)
+python -m uvicorn ui.server:app --reload --host 0.0.0.0 --port 8000
+```
+
+Then open http://localhost:8000 in your browser. New recordings are saved under `ui/recordings/`.
+
 The agent will open the URL, complete the prompt, and the session will be recorded to an MP4 you can drop into tech docs, READMEs, or tutorials.
 
 ## How it works
